@@ -8,12 +8,13 @@ import java.util.LinkedList;
  */
 public class Puzzle {
 
-    private char[][] config = new char[4][3];
+    private final char[][] config;
     private int blankX;
     private int blankY;
 
     public Puzzle(String config) {
         int pos = 0;
+        this.config = new char[4][3];
         for (int i = 0; i < this.config.length; i++) {
             for (int j = 0; j < this.config[i].length; j++) {
                 this.config[i][j] = config.charAt(pos);
@@ -26,13 +27,10 @@ public class Puzzle {
         }
     }
 
-    private Puzzle(Puzzle orig) {
-        blankX = orig.blankX;
-        blankY = orig.blankY;
-
-        for (int i = 0; i < orig.config.length; i++) {
-            config[i] = Arrays.copyOf(orig.config[i], orig.config[i].length);
-        }
+    private Puzzle(char[][] config, int blankX, int blankY) {
+        this.blankX = blankX;
+        this.blankY = blankY;
+        this.config = config;
     }
 
     public boolean equals(Object other) {
@@ -52,7 +50,7 @@ public class Puzzle {
     }
 
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder(20);
+        final StringBuilder stringBuilder = new StringBuilder(20);
         for (char[] row : config) {
             for (char tile : row) {
                 stringBuilder.append(tile);
@@ -63,36 +61,49 @@ public class Puzzle {
     }
 
     public LinkedList<Puzzle> nextConfigs() {
-        LinkedList<Puzzle> nextConfigs = new LinkedList<>();
+        final LinkedList<Puzzle> nextConfigs = new LinkedList<>();
         if (blankY > 0) {
-            Puzzle puzzle = new Puzzle(this);
-            puzzle.config[blankY][blankX] = puzzle.config[blankY - 1][blankX];
-            puzzle.config[blankY - 1][blankX] = '_';
-            puzzle.blankY--;
-            nextConfigs.add(puzzle);
+            final char[][] nextConfig = deepCloneConfig();
+
+            nextConfig[blankY][blankX] = nextConfig[blankY - 1][blankX];
+            nextConfig[blankY - 1][blankX] = '_';
+
+            nextConfigs.add(new Puzzle(nextConfig,blankX,blankY - 1));
         }
         if (blankY < 3) {
-            Puzzle puzzle = new Puzzle(this);
-            puzzle.config[blankY][blankX] = puzzle.config[blankY + 1][blankX];
-            puzzle.config[blankY + 1][blankX] = '_';
-            puzzle.blankY++;
-            nextConfigs.add(puzzle);
+            final char[][] nextConfig = deepCloneConfig();
+
+            nextConfig[blankY][blankX] = nextConfig[blankY + 1][blankX];
+            nextConfig[blankY + 1][blankX] = '_';
+
+            nextConfigs.add(new Puzzle(nextConfig,blankX,blankY + 1));
         }
         if (blankX > 0) {
-            Puzzle puzzle = new Puzzle(this);
-            puzzle.config[blankY][blankX] = puzzle.config[blankY][blankX - 1];
-            puzzle.config[blankY][blankX - 1] = '_';
-            puzzle.blankX--;
-            nextConfigs.add(puzzle);
+            final char[][] nextConfig = deepCloneConfig();
+
+            nextConfig[blankY][blankX] = nextConfig[blankY][blankX - 1];
+            nextConfig[blankY][blankX - 1] = '_';
+
+            nextConfigs.add(new Puzzle(nextConfig,blankX - 1,blankY));
         }
         if (blankX < 2) {
-            Puzzle puzzle = new Puzzle(this);
-            puzzle.config[blankY][blankX] = puzzle.config[blankY][blankX + 1];
-            puzzle.config[blankY][blankX + 1] = '_';
-            puzzle.blankX++;
-            nextConfigs.add(puzzle);
+            final char[][] nextConfig = deepCloneConfig();
+
+            nextConfig[blankY][blankX] = nextConfig[blankY][blankX + 1];
+            nextConfig[blankY][blankX + 1] = '_';
+
+            nextConfigs.add(new Puzzle(nextConfig,blankX + 1,blankY));
         }
 
         return nextConfigs;
+    }
+
+    private char[][] deepCloneConfig() {
+        final char[][] nextConfig = new char[4][3];
+
+        for (int i = 0; i < config.length; i++) {
+            nextConfig[i] = Arrays.copyOf(config[i], config[i].length);
+        }
+        return nextConfig;
     }
 }

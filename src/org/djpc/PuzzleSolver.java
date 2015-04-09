@@ -1,10 +1,8 @@
 package org.djpc;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -18,7 +16,7 @@ public class PuzzleSolver {
         new PuzzleSolver(args[0]);
     }
 
-    private PuzzleSolver(String filename) {
+    public PuzzleSolver(String filename) {
         String[] split = filename.split("[.2]");
 
         if (split.length != 3) {
@@ -31,6 +29,7 @@ public class PuzzleSolver {
         for (String line : formattedOutput) {
             System.out.println(line);
         }
+        System.out.println(filename);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (String line : formattedOutput) {
@@ -58,7 +57,7 @@ public class PuzzleSolver {
 
     private LinkedList<Puzzle> iterativeDeepening(Puzzle start, Puzzle dest) {
         for (int depth = 1; true; depth++) { // doubtful termination
-            LinkedList<Puzzle> route = depthFirst(start, dest, depth);
+            final LinkedList<Puzzle> route = depthFirst(start, dest, depth);
             if (route != null) {
                 System.out.println(depth);
                 return route; // fast exit
@@ -69,13 +68,13 @@ public class PuzzleSolver {
     private LinkedList<Puzzle> depthFirst(Puzzle start, Puzzle dest, int depth) {
         if (depth == 0) return null;
         else if (start.equals(dest)) {
-            LinkedList<Puzzle> route = new LinkedList<Puzzle>();
+            final LinkedList<Puzzle> route = new LinkedList<Puzzle>();
             route.add(dest); // construct singleton route
             return route;
         } else {
-            LinkedList<Puzzle> nextConfig = start.nextConfigs();
+            final LinkedList<Puzzle> nextConfig = start.nextConfigs();
             for (Puzzle next : nextConfig) { // search top-down
-                LinkedList<Puzzle> route = depthFirst(next, dest, depth - 1);
+                final LinkedList<Puzzle> route = depthFirst(next, dest, depth - 1);
                 if (route != null) {
                     route.addFirst(start);
                     return route;
