@@ -63,39 +63,28 @@ public class Puzzle {
     public LinkedList<Puzzle> nextConfigs() {
         final LinkedList<Puzzle> nextConfigs = new LinkedList<>();
         if (blankY > 0) {
-            final char[][] nextConfig = deepCloneConfig();
-
-            nextConfig[blankY][blankX] = nextConfig[blankY - 1][blankX];
-            nextConfig[blankY - 1][blankX] = '_';
-
-            nextConfigs.add(new Puzzle(nextConfig,blankX,blankY - 1));
+            nextConfigs.add(shiftTiles(0,-1));
         }
         if (blankY < 3) {
-            final char[][] nextConfig = deepCloneConfig();
-
-            nextConfig[blankY][blankX] = nextConfig[blankY + 1][blankX];
-            nextConfig[blankY + 1][blankX] = '_';
-
-            nextConfigs.add(new Puzzle(nextConfig,blankX,blankY + 1));
+            nextConfigs.add(shiftTiles(0,1));
         }
         if (blankX > 0) {
-            final char[][] nextConfig = deepCloneConfig();
-
-            nextConfig[blankY][blankX] = nextConfig[blankY][blankX - 1];
-            nextConfig[blankY][blankX - 1] = '_';
-
-            nextConfigs.add(new Puzzle(nextConfig,blankX - 1,blankY));
+            nextConfigs.add(shiftTiles(-1,0));
         }
         if (blankX < 2) {
-            final char[][] nextConfig = deepCloneConfig();
-
-            nextConfig[blankY][blankX] = nextConfig[blankY][blankX + 1];
-            nextConfig[blankY][blankX + 1] = '_';
-
-            nextConfigs.add(new Puzzle(nextConfig,blankX + 1,blankY));
+            nextConfigs.add(shiftTiles(1,0));
         }
 
         return nextConfigs;
+    }
+
+    private Puzzle shiftTiles(int x, int y) {
+        final char[][] nextConfig = deepCloneConfig();
+
+        nextConfig[blankY][blankX] = nextConfig[blankY + y][blankX + x];
+        nextConfig[blankY + y][blankX + x] = '_';
+
+        return new Puzzle(nextConfig,blankX + x,blankY + y);
     }
 
     private char[][] deepCloneConfig() {
