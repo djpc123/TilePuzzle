@@ -16,6 +16,7 @@ public class PuzzleSolver {
 
     /**
      * Finds the shortest route between a two 11 tile puzzle configurations.
+     *
      * @param filename The filename containing the start and destination configurations, eg "adddbadcbd_b2ad_dabdcbddb.txt"
      */
     public PuzzleSolver(String filename) {
@@ -49,6 +50,7 @@ public class PuzzleSolver {
 
     /**
      * Finds the shortest route between a two 11 tile puzzle configurations.
+     *
      * @param args Expects 1 argument, which should be the filename containing the start and destination configurations,
      *             eg "adddbadcbd_b2ad_dabdcbddb.txt"
      */
@@ -62,6 +64,7 @@ public class PuzzleSolver {
 
     /**
      * Formats a list of puzzle configurations into 4 lines of text.
+     *
      * @param solution A route between two configurations.
      * @return An array of strings, one for each line, containing the route between two puzzle configurations.
      */
@@ -82,8 +85,9 @@ public class PuzzleSolver {
     /**
      * Finds the shortest path between two puzzle configurations by incrementing the maximum depth of paths and
      * attempting to find a path between configurations at each depth.
+     *
      * @param start The start configuration.
-     * @param dest The destination configuration.
+     * @param dest  The destination configuration.
      * @return A List containing the route between the configurations.
      */
     private List<Puzzle> iterativeDeepening(Puzzle start, Puzzle dest) {
@@ -103,8 +107,9 @@ public class PuzzleSolver {
     /**
      * Attempt to find a route from the end of the current route to the destination configuration. Checks to make sure
      * that it does not go back to the same configuration.
+     *
      * @param route The previous configurations in the route.
-     * @param dest The destination configuration.
+     * @param dest  The destination configuration.
      * @param depth The number of moves remaining.
      * @return A route to the destination configuration, or null if a route is not found.
      */
