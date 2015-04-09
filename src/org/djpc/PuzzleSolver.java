@@ -8,14 +8,6 @@ import java.util.LinkedList;
 
 public class PuzzleSolver {
 
-    public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Expected 1 argument, got " + args.length);
-            System.exit(1);
-        }
-        new PuzzleSolver(args[0]);
-    }
-
     public PuzzleSolver(String filename) {
         String[] split = filename.split("[.2]");
 
@@ -41,6 +33,14 @@ public class PuzzleSolver {
         }
     }
 
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            System.err.println("Expected 1 argument, got " + args.length);
+            System.exit(1);
+        }
+        new PuzzleSolver(args[0]);
+    }
+
     private String[] formatOutput(LinkedList<Puzzle> solution) {
         String[] lines = new String[4];
         Arrays.fill(lines, "");
@@ -59,7 +59,9 @@ public class PuzzleSolver {
         for (int depth = 1; true; depth++) { // doubtful termination
             LinkedList<Puzzle> startList = new LinkedList<>();
             startList.add(start);
+
             final LinkedList<Puzzle> route = depthFirstDevaVu(startList, dest, depth);
+
             if (route != null) {
                 System.out.println(depth);
                 return route; // fast exit
@@ -68,12 +70,14 @@ public class PuzzleSolver {
     }
 
     private LinkedList<Puzzle> depthFirstDevaVu(LinkedList<Puzzle> route, Puzzle dest, int depth) {
-        if (depth == 0) return null;
+        if (depth == 0) {
+            return null;
+        }
+
         Puzzle last = route.getLast();
         if (last.equals(dest)) {
             return route;
-        }
-        else {
+        } else {
             LinkedList<Puzzle> nextConfigs = last.nextConfigs();
             for (Puzzle next : nextConfigs) {
                 if (!route.contains(next)) {
