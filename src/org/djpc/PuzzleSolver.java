@@ -57,7 +57,9 @@ public class PuzzleSolver {
 
     private LinkedList<Puzzle> iterativeDeepening(Puzzle start, Puzzle dest) {
         for (int depth = 1; true; depth++) { // doubtful termination
-            final LinkedList<Puzzle> route = depthFirst(start, dest, depth);
+            LinkedList<Puzzle> startList = new LinkedList<>();
+            startList.add(start);
+            final LinkedList<Puzzle> route = depthFirstDevaVu(startList, dest, depth);
             if (route != null) {
                 System.out.println(depth);
                 return route; // fast exit
@@ -65,22 +67,25 @@ public class PuzzleSolver {
         }
     }
 
-    private LinkedList<Puzzle> depthFirst(Puzzle start, Puzzle dest, int depth) {
+    private LinkedList<Puzzle> depthFirstDevaVu(LinkedList<Puzzle> route, Puzzle dest, int depth) {
         if (depth == 0) return null;
-        else if (start.equals(dest)) {
-            final LinkedList<Puzzle> route = new LinkedList<Puzzle>();
-            route.add(dest); // construct singleton route
+        Puzzle last = route.getLast();
+        if (last.equals(dest)) {
             return route;
-        } else {
-            final LinkedList<Puzzle> nextConfig = start.nextConfigs();
-            for (Puzzle next : nextConfig) { // search top-down
-                final LinkedList<Puzzle> route = depthFirst(next, dest, depth - 1);
-                if (route != null) {
-                    route.addFirst(start);
-                    return route;
+        }
+        else {
+            LinkedList<Puzzle> nextConfigs = last.nextConfigs();
+            for (Puzzle next : nextConfigs) {
+                if (!route.contains(next)) {
+                    LinkedList<Puzzle> nextRoute = (LinkedList<Puzzle>) route.clone();
+                    nextRoute.add(next);
+                    LinkedList<Puzzle> wholeRoute = depthFirstDevaVu(nextRoute, dest, depth - 1);
+                    if (wholeRoute != null) {
+                        return wholeRoute;
+                    }
                 }
             }
-            return null;
         }
+        return null;
     }
 }
